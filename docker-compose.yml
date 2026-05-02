@@ -1,0 +1,75 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: novacrm
+      POSTGRES_USER: novacrm
+      POSTGRES_PASSWORD: novacrm
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "novacrm"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  web:
+    build: .
+    command: >
+      bash -c "python manage.py migrate &&
+               python manage.py seed_demo &&
+               python manage.py runserver 0.0.0.0:8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: novacrm.settings.dev
+      DATABASE_URL: postgres://novacrm:novacrm@postgres:5432/novacrm
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      DJANGO_SECRET_KEY: dev-secret-do-not-use-in-prod
+      DEBUG: "1"
+    volumes:
+      - .:/app
+    ports: ["8000:8000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  celery_worker:
+    build: .
+    command: celery -A novacrm worker -l info
+    environment:
+      DJANGO_SETTINGS_MODULE: novacrm.settings.dev
+      DATABASE_URL: postgres://novacrm:novacrm@postgres:5432/novacrm
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+
+  celery_beat:
+    build: .
+    command: celery -A novacrm beat -l info
+    environment:
+      DJANGO_SETTINGS_MODULE: novacrm.settings.dev
+      DATABASE_URL: postgres://novacrm:novacrm@postgres:5432/novacrm
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  pgdata:

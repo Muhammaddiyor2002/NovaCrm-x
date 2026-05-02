@@ -1,0 +1,6 @@
+{% load url_active %}
+<a href="{% url 'dashboard:'|add:name %}"
+   class="flex items-center gap-2 rounded-lg px-3 py-2 transition {% if current == name %}bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-100 font-medium{% else %}text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}">
+  <span>{{ icon }}</span>
+  <span>{{ label }}</span>
+</a>
