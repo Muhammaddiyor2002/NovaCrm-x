@@ -1,0 +1,57 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}NovaCRM X — The AI-Powered CRM Platform{% endblock %}
+{% block body %}
+<header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur sticky top-0 z-10">
+  <div class="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white font-bold">N</span>
+      <span class="font-semibold tracking-tight">NovaCRM X</span>
+    </div>
+    <nav class="flex items-center gap-3 text-sm">
+      <a href="{% url 'dashboard:pricing' %}" class="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300">Pricing</a>
+      <a href="/api/v1/docs/" class="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-300">API</a>
+      <a href="{% url 'dashboard:login' %}" class="rounded-lg border border-slate-300 dark:border-slate-700 px-3 py-1.5">Sign in</a>
+      <a href="{% url 'dashboard:register' %}" class="rounded-lg bg-brand-500 px-3 py-1.5 text-white hover:bg-brand-600">Get started</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="mx-auto max-w-6xl px-6 py-20 md:py-28">
+    <div class="max-w-3xl">
+      <p class="text-xs font-medium uppercase tracking-widest text-brand-600 dark:text-brand-300">Multi-tenant SaaS · AI-powered</p>
+      <h1 class="mt-4 text-4xl md:text-6xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+        The CRM your sales team will actually love.
+      </h1>
+      <p class="mt-6 text-lg text-slate-600 dark:text-slate-300">
+        NovaCRM X is the open, modular alternative to Salesforce, HubSpot, and Pipedrive. Multi-tenant
+        out of the box, with an AI assistant baked into every workflow.
+      </p>
+      <div class="mt-8 flex gap-3">
+        <a href="{% url 'dashboard:register' %}" class="rounded-lg bg-brand-500 px-5 py-3 text-white font-medium hover:bg-brand-600">Start free trial</a>
+        <a href="{% url 'dashboard:pricing' %}" class="rounded-lg border border-slate-300 dark:border-slate-700 px-5 py-3 font-medium hover:bg-slate-100 dark:hover:bg-slate-800">View pricing</a>
+      </div>
+    </div>
+    <div class="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6">
+      {% for feat in "AI Lead Scoring|Score, route and convert leads automatically.;Kanban Pipelines|Drag-and-drop deal management with weighted forecasting.;Built-in Support Desk|Tickets, SLAs, and customer responses in one place."|cut:"" %}{% endfor %}
+      <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
+        <div class="text-2xl">🤖</div>
+        <h3 class="mt-3 font-semibold">AI Lead Scoring</h3>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Score, route and convert leads automatically with a pluggable AI provider.</p>
+      </div>
+      <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
+        <div class="text-2xl">📊</div>
+        <h3 class="mt-3 font-semibold">Kanban Pipelines</h3>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Drag-and-drop deal management with weighted forecasting and stage probabilities.</p>
+      </div>
+      <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
+        <div class="text-2xl">🛟</div>
+        <h3 class="mt-3 font-semibold">Built-in Support Desk</h3>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">Tickets, SLAs, and customer responses in one place — no separate tool.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+  © NovaCRM X · MIT licensed
+</footer>
+{% endblock %}

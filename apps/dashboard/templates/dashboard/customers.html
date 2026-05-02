@@ -1,0 +1,43 @@
+{% extends "dashboard/_app.html" %}
+{% block title %}Customers — NovaCRM X{% endblock %}
+{% block page_title %}Customers{% endblock %}
+{% block page_subtitle %}Companies and the people who work there.{% endblock %}
+{% block content %}
+<div class="grid gap-6 lg:grid-cols-2">
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+    <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+      <h2 class="font-semibold">Companies</h2>
+      <span class="text-xs text-slate-500">{{ companies|length }}</span>
+    </div>
+    <ul class="divide-y divide-slate-200 dark:divide-slate-800">
+      {% for c in companies %}
+      <li class="px-6 py-3 text-sm flex items-center justify-between">
+        <span class="font-medium">{{ c.name }}</span>
+        <span class="text-slate-500">{{ c.industry|default:"—" }}</span>
+      </li>
+      {% empty %}
+      <li class="px-6 py-6 text-sm text-slate-500">No companies yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+    <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+      <h2 class="font-semibold">Contacts</h2>
+      <span class="text-xs text-slate-500">{{ contacts|length }}</span>
+    </div>
+    <ul class="divide-y divide-slate-200 dark:divide-slate-800">
+      {% for c in contacts %}
+      <li class="px-6 py-3 text-sm flex items-center justify-between">
+        <div>
+          <div class="font-medium">{{ c.full_name|default:c.email }}</div>
+          <div class="text-xs text-slate-500">{{ c.email }}{% if c.company %} · {{ c.company.name }}{% endif %}</div>
+        </div>
+        <span class="text-slate-500">{{ c.title|default:"" }}</span>
+      </li>
+      {% empty %}
+      <li class="px-6 py-6 text-sm text-slate-500">No contacts yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

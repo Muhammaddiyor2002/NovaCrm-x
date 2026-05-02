@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-novacrm}
+      POSTGRES_USER: ${POSTGRES_USER:-novacrm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  web:
+    build: .
+    command: gunicorn novacrm.wsgi:application --bind 0.0.0.0:8000 --workers 4 --access-logfile -
+    environment:
+      DJANGO_SETTINGS_MODULE: novacrm.settings.prod
+      DATABASE_URL: postgres://${POSTGRES_USER:-novacrm}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-novacrm}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-*}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      AI_PROVIDER: ${AI_PROVIDER:-dummy}
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  celery_worker:
+    build: .
+    command: celery -A novacrm worker -l info
+    environment:
+      DJANGO_SETTINGS_MODULE: novacrm.settings.prod
+      DATABASE_URL: postgres://${POSTGRES_USER:-novacrm}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-novacrm}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    depends_on: [postgres, redis]
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    depends_on: [web]
+    restart: unless-stopped
+
+volumes:
+  pgdata:

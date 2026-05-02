@@ -1,0 +1,28 @@
+{% extends "dashboard/_base.html" %}
+{% block title %}Pricing — NovaCRM X{% endblock %}
+{% block body %}
+<div class="mx-auto max-w-5xl px-6 py-16">
+  <h1 class="text-3xl font-semibold tracking-tight">Plans for every team</h1>
+  <p class="mt-2 text-slate-600 dark:text-slate-300">Start free. Upgrade when you grow.</p>
+  <div class="mt-10 grid gap-6 md:grid-cols-3">
+    {% for plan in plans %}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 flex flex-col">
+      <h3 class="text-lg font-semibold">{{ plan.name }}</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">{{ plan.description }}</p>
+      <div class="mt-6 text-3xl font-bold">${{ plan.price_monthly }}<span class="text-sm font-medium text-slate-500">/mo</span></div>
+      <ul class="mt-4 space-y-2 text-sm">
+        {% if plan.max_users %}<li>Up to {{ plan.max_users }} users</li>{% else %}<li>Unlimited users</li>{% endif %}
+        {% if plan.max_contacts %}<li>Up to {{ plan.max_contacts }} contacts</li>{% else %}<li>Unlimited contacts</li>{% endif %}
+        <li>API access</li>
+        <li>AI features</li>
+      </ul>
+      <a href="{% url 'dashboard:register' %}" class="mt-auto pt-6">
+        <span class="block w-full rounded-lg bg-brand-500 px-4 py-2 text-center text-white font-medium hover:bg-brand-600">Choose {{ plan.name }}</span>
+      </a>
+    </div>
+    {% empty %}
+    <p class="text-slate-500">Plans will appear here once seeded. Run <code>python manage.py seed_demo</code>.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

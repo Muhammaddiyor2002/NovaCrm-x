@@ -1,0 +1,30 @@
+{% extends "dashboard/_app.html" %}
+{% block title %}Deals — NovaCRM X{% endblock %}
+{% block page_title %}Deals · {{ pipeline.name|default:"No pipeline" }}{% endblock %}
+{% block page_subtitle %}Drag-and-drop pipeline (UI hooks reserved for HTMX/Alpine).{% endblock %}
+{% block content %}
+{% if columns %}
+<div class="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
+  {% for stage, deals in columns %}
+  <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 min-h-[300px]">
+    <div class="flex items-center justify-between px-1 pb-2">
+      <h3 class="font-semibold text-sm">{{ stage.name }}</h3>
+      <span class="text-xs text-slate-500">{{ stage.probability }}%</span>
+    </div>
+    <div class="space-y-2">
+      {% for d in deals %}
+      <div class="rounded-lg border border-slate-200 dark:border-slate-800 p-3 text-sm">
+        <div class="font-medium">{{ d.title }}</div>
+        <div class="mt-1 text-xs text-slate-500">${{ d.amount }} {{ d.currency }} · {{ d.probability }}%</div>
+      </div>
+      {% empty %}
+      <div class="text-xs text-slate-500 px-1">No deals</div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-sm text-slate-500">No pipeline yet. The first lead conversion will create a default pipeline automatically.</p>
+{% endif %}
+{% endblock %}

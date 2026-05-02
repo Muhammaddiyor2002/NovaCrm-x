@@ -1,0 +1,32 @@
+{% extends "dashboard/_app.html" %}
+{% block title %}Tasks — NovaCRM X{% endblock %}
+{% block page_title %}Tasks{% endblock %}
+{% block page_subtitle %}Things to do across your team.{% endblock %}
+{% block content %}
+<div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+  <table class="w-full text-sm">
+    <thead class="bg-slate-50 dark:bg-slate-950 text-xs uppercase tracking-wide text-slate-500">
+      <tr>
+        <th class="px-6 py-3 text-left">Title</th>
+        <th class="px-6 py-3 text-left">Priority</th>
+        <th class="px-6 py-3 text-left">Status</th>
+        <th class="px-6 py-3 text-left">Due</th>
+        <th class="px-6 py-3 text-left">Assignee</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+      {% for t in tasks %}
+      <tr>
+        <td class="px-6 py-3 font-medium">{{ t.title }}</td>
+        <td class="px-6 py-3">{{ t.get_priority_display }}</td>
+        <td class="px-6 py-3"><span class="rounded-full bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs">{{ t.get_status_display }}</span></td>
+        <td class="px-6 py-3 text-slate-500">{{ t.due_at|default:"—" }}</td>
+        <td class="px-6 py-3 text-slate-500">{{ t.assignee|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="px-6 py-8 text-center text-slate-500">No tasks yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

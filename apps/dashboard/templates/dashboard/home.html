@@ -1,0 +1,33 @@
+{% extends "dashboard/_app.html" %}
+{% block title %}Dashboard — NovaCRM X{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}A high-level snapshot of your workspace.{% endblock %}
+
+{% block content %}
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  {% include "dashboard/_kpi.html" with label="Open Leads" value=metrics.leads_open icon="🎯" %}
+  {% include "dashboard/_kpi.html" with label="Open Deals" value=metrics.deals_open icon="💼" %}
+  {% include "dashboard/_kpi.html" with label="Pipeline Value" value=metrics.deals_value icon="💰" prefix="$" %}
+  {% include "dashboard/_kpi.html" with label="Open Tickets" value=metrics.tickets_open icon="🛟" %}
+  {% include "dashboard/_kpi.html" with label="Tasks To-Do" value=metrics.tasks_today icon="✅" %}
+  {% include "dashboard/_kpi.html" with label="Contacts" value=metrics.contacts_total icon="👤" %}
+  {% include "dashboard/_kpi.html" with label="Companies" value=metrics.companies_total icon="🏢" %}
+  {% include "dashboard/_kpi.html" with label="Total Leads" value=metrics.leads_total icon="📨" %}
+</div>
+
+<div class="mt-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6">
+  <h2 class="font-semibold tracking-tight">Pipeline by stage</h2>
+  <p class="text-sm text-slate-500 dark:text-slate-400">Open deals only.</p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {% for row in deals_by_stage %}
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+      <div class="text-xs uppercase tracking-widest text-slate-500">{{ row.stage__name|default:"Unstaged" }}</div>
+      <div class="mt-1 text-2xl font-semibold">{{ row.count }}</div>
+      <div class="text-sm text-slate-500">${{ row.value|default:0 }}</div>
+    </div>
+    {% empty %}
+    <p class="text-sm text-slate-500">No deals yet. <a class="text-brand-600 hover:underline" href="{% url 'dashboard:deals' %}">Create your first deal</a>.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+-r base.txt
+
+# Testing
+pytest>=8.2
+pytest-django>=4.8
+pytest-cov>=5.0
+factory-boy>=3.3
+faker>=25.0
+freezegun>=1.5
+
+# Linting / typing
+ruff>=0.5
+black>=24.4
+mypy>=1.10
+django-stubs[compatible-mypy]>=5.0
+djangorestframework-stubs[compatible-mypy]>=3.15
+
+# Dev tooling
+ipython>=8.24
+django-debug-toolbar>=4.4
+pip-audit>=2.7
