@@ -16,6 +16,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 INTERNAL_IPS = ["127.0.0.1"]
 
+# Local-friendly defaults: don't require Redis/Postgres for `runserver`.
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+
 # Debug toolbar (only loaded if installed; safe in CI without the package)
 try:  # pragma: no cover - dev-only
     import debug_toolbar  # noqa: F401
